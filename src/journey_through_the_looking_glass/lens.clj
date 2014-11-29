@@ -45,7 +45,8 @@
   (fapply [this _ args] (->Constant (apply concat (:value this) args))))
 
 (defn each [f]
-  (fn traverse [[x & xs]]
-    (if x
-     (-> (f x) (fapply cons (traverse xs)))
-      [])))
+  (fn [xs]
+    (reduce
+      (fn [accumulator x] (fapply (f x) cons accumulator))
+      []
+      (reverse xs))))
