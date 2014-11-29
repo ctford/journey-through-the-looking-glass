@@ -11,3 +11,8 @@
   (-> {:x 1 :y 2} (update (in [:x]) inc)) => {:x 2 :y 2}
   (-> {:x 1 :y 2} (view (in [:x]))) => 1
   (-> {:x 1 :y 2} (put (in [:x]) 7)) => {:x 7 :y 2})
+
+(fact "Lenses compose with ordinary function composition."
+  (-> {:hours 1} (update (comp (in [:hours]) minutes) inc)) => {:hours 61/60}
+  (-> {:hours 1} (view (comp (in [:hours]) minutes))) => 60
+  (-> {:hours 1} (put (comp (in [:hours]) minutes) 120)) =>  {:hours 2})
