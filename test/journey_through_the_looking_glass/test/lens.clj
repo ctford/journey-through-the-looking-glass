@@ -19,4 +19,5 @@
 
 (fact "The each traversal iterates through a sequence."
    (-> [[1] [2] [3]] (update each (partial map inc))) => [[2] [3] [4]]
+   (-> [1 2 3] (updates each inc)) => [2 3 4]
    (-> [[1] [2] [3]] (view each)) => [1 2 3])

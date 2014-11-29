@@ -44,6 +44,12 @@
   Constant
   (fapply [this _ args] (->Constant (apply concat (:value this) [(:value args)]))))
 
+(defn raise [x] (map (fn [y] [y]) x))
+(defn lower [x] (apply concat x))
+
+(defn updates [x lens f]
+  (-> x raise (update lens (partial map f)) lower))
+
 (defn each [f]
   (fn [xs]
     (reduce
