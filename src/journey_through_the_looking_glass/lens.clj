@@ -42,7 +42,7 @@
   (fapply [this f args] (->Identity (apply f (:value this) [(:value args)])))
 
   Constant
-  (fapply [this _ args] (->Constant (apply concat (:value this) args))))
+  (fapply [this _ args] (->Constant (apply concat (:value this) [(:value args)]))))
 
 (defn each [f]
   (fn [xs]
