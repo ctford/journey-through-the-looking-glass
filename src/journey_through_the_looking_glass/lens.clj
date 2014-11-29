@@ -8,23 +8,21 @@
   (fmap [this f]))
 
 ; Instances
-(defrecord Identity [x]
-  Functor (fmap [this f] (-> x f ->Identity))
-  Valuable (value [this] x))
+(defrecord Identity [value]
+  Functor (fmap [this f] (-> value f ->Identity)))
 
-(defrecord Constant [x]
-  Functor (fmap [this _] this)
-  Valuable (value [this] x))
+(defrecord Constant [value]
+  Functor (fmap [this _] this))
 
 ; Functions
 (defn update [x lens f]
-  (-> x ((lens (comp ->Identity f))) value))
+  (-> x ((lens (comp ->Identity f))) :value))
 
 (defn put [x lens y]
   (update x lens (constantly y)))
 
 (defn view [x lens]
-  (-> x ((lens ->Constant)) value))
+  (-> x ((lens ->Constant)) :value))
 
 ; Lenses
 (defn minutes [f]
@@ -34,3 +32,20 @@
   (fn [f]
     (fn [x]
       (-> x (get-in path) f (fmap (partial assoc-in x path))))))
+
+; Traversals
+(defprotocol Applicative
+  (fapply [this f args]))
+
+(extend-protocol Applicative
+  Identity
+  (fapply [this f args] (->Identity (apply f (:value this) [(:value args)])))
+
+  Constant
+  (fapply [this _ args] (->Constant (apply concat (:value this) args))))
+
+(defn each [f]
+  (fn traverse [[x & xs]]
+    (if x
+     (-> (f x) (fapply cons (traverse xs)))
+      [])))

@@ -16,3 +16,6 @@
   (-> {:hours 1} (update (comp (in [:hours]) minutes) inc)) => {:hours 61/60}
   (-> {:hours 1} (view (comp (in [:hours]) minutes))) => 60
   (-> {:hours 1} (put (comp (in [:hours]) minutes) 120)) =>  {:hours 2})
+
+(fact "The each traversal iterates through a sequence."
+   (-> [[1] [2] [3]] (update each (partial map inc))) => [[2] [3] [4]])
