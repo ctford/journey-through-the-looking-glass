@@ -12,6 +12,9 @@
       (-> 3 ->Maybe (fmap inc) :value) => 4
       (-> nil ->Maybe (fmap inc) :value) => nil)
 
+(fact "The sequence Functor applies a function to each element in the sequence."
+      (-> [1 2 3] ->Sequence (fmap inc) :value) => [2 3 4])
+
 (fact "The minutes lens supports the three lens operations."
   (-> 3 (update minutes (partial + 30))) => 7/2
   (-> 3 (view minutes)) => 180

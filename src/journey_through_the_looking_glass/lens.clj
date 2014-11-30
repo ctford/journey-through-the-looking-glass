@@ -1,9 +1,6 @@
 (ns journey-through-the-looking-glass.lens)
 
 ; Typeclasses
-(defprotocol Valuable
-  (value [this]))
-
 (defprotocol Functor
   (fmap [this f]))
 
@@ -16,6 +13,9 @@
 
 (defrecord Maybe [value]
   Functor (fmap [this f] (some-> value f ->Maybe)))
+
+(defrecord Sequence [value]
+  Functor (fmap [this f] (->> value (map f) ->Sequence)))
 
 ; Functions
 (defn update [x lens f]
