@@ -3,17 +3,25 @@
             [journey-through-the-looking-glass.lens :refer :all]))
 
 (fact "The identity Functor applies a function to a value."
-      (-> 3 ->Identity (fmap inc) :value) => 4)
+      (-> 3 ->Identity (fmap inc) :value) => 4
+      ((fidentity inc) 3) => 4)
 
 (fact "The constant Functor ignores any applied function."
-      (-> 3 ->Constant (fmap inc) :value) => 3)
+      (-> 3 ->Constant (fmap inc) :value) => 3
+      ((fconstant inc) 3) => 3)
 
 (fact "The maybe Functor only applies a function when a value is present."
       (-> 3 ->Maybe (fmap inc) :value) => 4
-      (-> nil ->Maybe (fmap inc) :value) => nil)
+      (-> nil ->Maybe (fmap inc) :value) => nil
+      ((fmaybe inc) 3) => 4
+      ((fmaybe inc) nil) => nil)
 
 (fact "The sequence Functor applies a function to each element in the sequence."
-      (-> [1 2 3] ->Sequence (fmap inc) :value) => [2 3 4])
+      (-> [1 2 3] ->Sequence (fmap inc) :value) => [2 3 4]
+      ((fsequence inc) [1 2 3]) => [2 3 4])
+
+(fact "The path Functor applies a function to the value corresponding to a key within a map."
+      ((fpath :x inc) {:x 1 :y 1}) => {:x 2 :y 1})
 
 (fact "The minutes lens supports the three lens operations."
   (-> 3 (update minutes (partial + 30))) => 7/2

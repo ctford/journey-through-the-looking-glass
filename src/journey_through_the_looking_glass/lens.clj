@@ -4,6 +4,16 @@
 (defprotocol Functor
   (fmap [this f]))
 
+(defn fsequence [f] (partial map f))
+
+(defn fidentity [f] f)
+
+(defn fmaybe [f] #(some-> % f))
+
+(defn fconstant [f] identity)
+
+(defn fpath [k f] #(update-in % [k] f))
+
 ; Instances
 (defrecord Identity [value]
   Functor (fmap [this f] (-> value f ->Identity)))
