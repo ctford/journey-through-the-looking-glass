@@ -2,6 +2,12 @@
   (:require [midje.sweet :refer :all]
             [journey-through-the-looking-glass.lens :refer :all]))
 
+(fact "The identity Functor applies a function to a value."
+      (-> 3 ->Identity (fmap inc) :value) => 4)
+
+(fact "The constant Functor ignores any applied function."
+      (-> 3 ->Constant (fmap inc) :value) => 3)
+
 (fact "The maybe Functor only applies a function when a value is present."
       (-> 3 ->Maybe (fmap inc) :value) => 4
       (-> nil ->Maybe (fmap inc) :value) => nil)
