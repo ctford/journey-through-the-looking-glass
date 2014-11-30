@@ -14,6 +14,9 @@
 (defrecord Constant [value]
   Functor (fmap [this _] this))
 
+(defrecord Maybe [value]
+  Functor (fmap [this f] (some-> value f ->Maybe)))
+
 ; Functions
 (defn update [x lens f]
   (-> x ((lens (comp ->Identity f))) :value))

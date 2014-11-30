@@ -2,6 +2,10 @@
   (:require [midje.sweet :refer :all]
             [journey-through-the-looking-glass.lens :refer :all]))
 
+(fact "The maybe Functor only applies a function when a value is present."
+      (-> 3 ->Maybe (fmap inc) :value) => 4
+      (-> nil ->Maybe (fmap inc) :value) => nil)
+
 (fact "The minutes lens supports the three lens operations."
   (-> 3 (update minutes (partial + 30))) => 7/2
   (-> 3 (view minutes)) => 180
