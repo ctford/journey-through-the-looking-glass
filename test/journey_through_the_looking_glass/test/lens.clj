@@ -18,13 +18,13 @@
 (fact "Functors compose."
       (((comp fsequence fmaybe) inc) [1 nil 3]) => [2 nil 4])
 
-(fact "The path Functor applies a function to the value corresponding to a key within a map."
-      ((fpath :x inc) {:x 1 :y 1}) => {:x 2 :y 1})
+(fact "The in Functor applies a function to the value corresponding to a key within a map."
+      ((fin :x inc) {:x 1 :y 1}) => {:x 2 :y 1})
 
 (fact "The minutes Lens supports the Lens operations."
   (-> 3 (update minutes (partial + 60))) => 4
   (-> 3 (view minutes)) => 180)
 
 (fact "The in Lens supports the Lens operations."
-  (-> {:x 1 :y 2} (update (in [:x]) inc)) => {:x 2 :y 2}
-  (-> {:x 1 :y 2} (view (in [:x]))) => 1)
+  (-> {:x 1 :y 2} (update (partial in :x) inc)) => {:x 2 :y 2}
+  (-> {:x 1 :y 2} (view (partial in :x))) => 1)
