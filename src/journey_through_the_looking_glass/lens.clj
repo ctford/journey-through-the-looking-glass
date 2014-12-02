@@ -11,6 +11,17 @@
         f                                     ; Apply function
         (functor/fmap (partial assoc m k))))) ; Reconstruct
 
+(defn up-to [n]
+  (-> n
+      range
+      functor/->Sequence))
+
+(fact "The In Lens focuses on a key's value."
+  (-> {:x 3 :y 2}
+      ((in :x up-to))
+      (get :value))
+      => [{:x 0 :y 2} {:x 1 :y 2} {:x 2 :y 2}])
+
 (defn minutes [f]
   (fn [hours]
     (-> hours

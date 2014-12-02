@@ -48,6 +48,13 @@
 (defprotocol Functor
   (fmap [this f]))
 
+(defrecord Sequence [value]
+  Functor
+  (fmap [this f] (-> this
+                     (get :value)    ; Deconstruct
+                     ((fsequence f)) ; Apply function
+                     ->Sequence)))   ; Reconstruct
+
 (defrecord Identity [value]
   Functor
   (fmap [this f] (-> this
