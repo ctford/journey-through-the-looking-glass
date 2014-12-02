@@ -1,32 +1,42 @@
-(ns journey-through-the-looking-glass.lens)
+(ns journey-through-the-looking-glass.lens
+  (:require 
+    [journey-through-the-looking-glass.functor :as functor]
+    [midje.sweet :refer :all]))
 
-; Functors
-(defn fsequence [f] (partial map f))
-(defn fidentity [f] (identity f))
-(defn fmaybe [f] (fn [x] (some-> x f)))
-(defn fin [k f] (fn [x] (update-in x [k] f)))
-(defn fconstant [f] identity)
+; Lenses
+(defn in [k f]
+  (fn [m]
+    (-> m
+        (get k)                               ; Deconstruct
+        f                                     ; Apply function
+        (functor/fmap (partial assoc m k))))) ; Reconstruct
 
-(defn inject [t functor]
-  (fn [f]
-    (fn [x]
-      ((functor (comp f t)) x))))
+(defn minutes [f]
+  (fn [hours]
+    (-> hours
+        (* 60)                                ; Deconstruct
+        f                                     ; Apply function
+        (functor/fmap (partial * 1/60)))))    ; Reconstruct
 
 ; Lens operations
 (defn update [x lens f]
-  ((lens (inject f fidentity)) x))
+  (-> x
+      ((lens (comp functor/->Identity f)))
+      (get :value)))
 
 (defn put [x lens value]
   (update x lens (constantly value)))
 
 (defn view [x lens]
-  ((lens fconstant) x))
+  (-> x
+      ((lens functor/->Constant))
+      (get :value)))
 
-; Lenses
-(defn minutes [f]
-  (fn [x]
-    ((f #(/ % 60)) (* x 60))))
 
-(defn in [k f]
-  (fn [x]
-    ((f (partial assoc-in x [k])) (get-in x [k]))))
+(fact "The In Lens supports the Lens operations."
+  (-> {:x 1 :y 2} (update (partial in :x) inc)) => {:x 2 :y 2}
+  (-> {:x 1 :y 2} (view (partial in :x))) => 1)
+
+(fact "The Minutes Lens supports the Lens operations."
+  (-> 3 (update minutes (partial + 60))) => 4
+  (-> 3 (view minutes)) => 180)
