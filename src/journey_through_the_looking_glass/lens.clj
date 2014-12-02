@@ -22,6 +22,21 @@
       (get :value))
       => [{:x 0 :y 2} {:x 1 :y 2} {:x 2 :y 2}])
 
+(defn exclaim [string]
+  (functor/fmap (functor/->Maybe string) #(str % "!!!!!")))
+
+(fact "Using the Maybe Functor with a Lens can return nil for the whole. "
+  (-> {:first-name "Bruce" :last-name "Durling"}
+      ((in :last-name exclaim))
+      (get :value))
+      => {:first-name "Bruce" :last-name "Durling!!!!!"}
+
+  (-> {:first-name "Aphyr"}
+      ((in :last-name exclaim))
+      (get :value))
+      => nil)
+
+
 (defn minutes [f]
   (fn [hours]
     (-> hours

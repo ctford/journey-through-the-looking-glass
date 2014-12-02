@@ -55,6 +55,13 @@
                      ((fsequence f)) ; Apply function
                      ->Sequence)))   ; Reconstruct
 
+(defrecord Maybe [value]
+  Functor
+  (fmap [this f] (-> this
+                     (get :value)    ; Deconstruct
+                     ((fmaybe f))    ; Apply function
+                     ->Maybe)))      ; Reconstruct
+
 (defrecord Identity [value]
   Functor
   (fmap [this f] (-> this
