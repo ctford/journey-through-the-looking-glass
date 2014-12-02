@@ -16,17 +16,15 @@
   [x lens f]
   ((:fmap lens) f x))
 
-(defn fapply [f x] (f x))
 (def it
-  (lens list fapply))
+  (lens list (fn [f x] (f x))))
 
 (fact "The 'it' lens is the identity."
   (-> 9 (view it)) => [9]
   (-> 9 (update it inc)) => 10)
 
-(defn fconstant [f x] x)
 (def nothing
-  (lens (constantly []) fconstant))
+  (lens (constantly []) (fn [f x] x)))
 
 (fact "The 'nothing' lens doesn't have a focus."
   (-> 9 (view nothing)) => []
@@ -41,19 +39,20 @@
   (-> [1 2 3] (update each inc)) => [2 3 4])
 
 
-(defn fapply-in [path f x] (update-in x path f))
-
 (defn in
   [path]
-  (lens (fn [x] [(get-in x path)]) (partial fapply-in path)))
+  (lens
+    (fn [x] [(get-in x path)])
+    (fn [f x] (update-in x path f))))
 
 (fact "The 'in' lens focuses into a map based on a path."
   (-> {:foo 1} (view (in [:foo]))) => [1]
   (-> {:foo 1} (update (in [:foo]) inc)) => {:foo 2})
 
 
-(defn fwhen [applicable? f x] (if (applicable? x) (f x) x))
-(defn fsome [applicable? f x] (map (partial fwhen applicable? f) x))
+(defn fsome
+  [applicable? f x]
+  (map #(if (applicable? %) (f %) %) x))
 
 (defn only
   [applicable?]
@@ -97,7 +96,6 @@
        (reduce conj {})))
 
 (def all-entries
-  "A lens from map -> each entry."
   (lens seq map-conj))
 
 (fact "The 'all-entries' lens focuses on the entries of a map."
