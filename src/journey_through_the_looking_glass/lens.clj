@@ -9,7 +9,7 @@
     (-> m
         (get k)                               ; Deconstruct
         f                                     ; Apply function
-        (functor/fmap (partial assoc m k))))) ; Reconstruct
+        (functor/fmap (partial assoc m k))))) ; Apply reconstruction
 
 (defn up-to [n]
   (-> n
@@ -43,7 +43,7 @@
     (-> hours
         (* 60)                                ; Deconstruct
         f                                     ; Apply function
-        (functor/fmap (partial * 1/60)))))    ; Reconstruct
+        (functor/fmap (partial * 1/60)))))    ; Apply reconstruction
 
 (fact "Lenses can focus on any view of a structure, not just substructures."
       (-> 3
