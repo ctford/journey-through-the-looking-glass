@@ -22,7 +22,6 @@
 
 (fact "The 'each' lens focuses on each item in a sequence."
   (-> [1 2 3] (view each)) => [1 2 3]
-  (-> [1 2 3] (update each inc)) => [2 3 4]
   (-> [1 2 3] (update each inc)) => [2 3 4])
 
 

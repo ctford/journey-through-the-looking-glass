@@ -83,6 +83,6 @@
       (-> {:x 1 :y 2} (view (partial in :x))) => 1)
 
 (fact "The Minutes Lens supports the Lens operations."
-      (-> 120 (update minutes dec)) => 60 
+      (-> 120 (update minutes dec)) => 60
       (-> 120 (put minutes 4)) => 240
       (-> 120 (view minutes)) => 2)
