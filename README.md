@@ -1,27 +1,25 @@
 Journey through the looking glass
 =================================
 
-Background
-----------
+The problem
+-----------
 
-* I want to coordinate coarse-grained state.
-* I want to compose fine-grained functions.
+* I want to coordinate with coarse-grained state.
+* I want to compose with fine-grained functions.
 * These two ideals are in tension.
 
-Standard library
-----------------
+Clojure/core
+------------
 
-* `update-in` lets us separate focusing on a substructure from
-  the function we apply.
+* `update-in` separates the focus from the applied function.
 * The same paths work with `get-in` and `assoc-in`.
-* However, `update-in` is specialised to a particular kind of
-  focus.
+* However, `update-in` is specialised to one kind of focus.
 
 Functors
 --------
 
 * "Functors are structure-preserving maps between Categories"
-  - Barr and Wells.
+    - Barr and Wells.
 * Functors are functions that lift functions into a context.
 * Functors compose as functions.
 
@@ -30,8 +28,7 @@ Lenses
 
 * Lenses are functions that lift contextualising functions into
   a context.
-* `update`, `put`, `view` and more can all be represented by a
-  single function.
+* `update`, `put`, `view` can all be represented by one function.
 * Lenses compose as functions.
 
 Traversals
@@ -39,13 +36,13 @@ Traversals
 
 * Traversals are Lenses that can have more than one target.
 * The `update` part works...
-* ...but `view` requires variadic Functors (Applicatives) and
+* ...but `view` needs variadic Functors (Applicatives) and
   Monoid targets.
 
 Traversy
 --------
 
-* Uses building blocks from the standard library.
+* Uses building blocks from Clojure/core.
 * Composes easily - though not through function composition.
 * Doesn't have the full power of pure Lenses and Traversals.
 
