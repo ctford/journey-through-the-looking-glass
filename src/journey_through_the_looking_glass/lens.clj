@@ -9,7 +9,7 @@
     (-> m
         (get k)                          ; Deconstruct
         f                                ; Apply function
-        (functor/fmap #(assoc % m k))))) ; Apply reconstruction
+        (functor/fmap #(assoc m k %))))) ; Apply reconstruction
 
 (def up-to (comp functor/->Sequence range))
 
@@ -18,17 +18,26 @@
       => (functor/->Sequence [{:x 0 :y 2} {:x 1 :y 2} {:x 2 :y 2}]))
 
 
-(defn exclaim [string]
-  (functor/fmap (functor/->Maybe string) #(str % "!!!!!")))
+(def apply-tax (partial * 1.10))
+
+(defn number!?!?!
+  [string]
+  (functor/->Maybe
+    (try
+      (Integer/parseInt string)
+      (catch Exception e
+        nil))))
 
 (fact "Using the Maybe Functor can return nil for the whole. "
-      ((in :last-name exclaim)
-       {:first-name "Bruce" :last-name "Durling"})
+      (-> {:price "90" :currency "AUD"}
+          ((in :price number!?!?!))
+          (functor/fmap #(update-in % [:price] apply-tax)))
       => (functor/->Maybe
-           {:first-name "Bruce" :last-name "Durling!!!!!"})
+           {:price 99.00000000000001 :currency "AUD"})
 
-      ((in :last-name exclaim)
-       {:first-name "Aphyr"})
+      (-> {:price "foobar" :currency "AUD"}
+          ((in :price number!?!?!))
+          (functor/fmap #(update-in % [:price] apply-tax)))
       => (functor/->Maybe
            nil))
 
