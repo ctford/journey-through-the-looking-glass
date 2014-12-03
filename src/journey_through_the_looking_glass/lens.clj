@@ -14,8 +14,7 @@
 (def up-to (comp functor/->Sequence range))
 
 (fact "The In Lens focuses on a key's value."
-  (-> {:x 3 :y 2}
-      ((in :x up-to)))
+      ((in :x up-to) {:x 3 :y 2})
       => (functor/->Sequence [{:x 0 :y 2} {:x 1 :y 2} {:x 2 :y 2}]))
 
 
@@ -23,12 +22,10 @@
   (functor/fmap (functor/->Maybe string) #(str % "!!!!!")))
 
 (fact "Using the Maybe Functor with a Lens can return nil for the whole. "
-  (-> {:first-name "Bruce" :last-name "Durling"}
-      ((in :last-name exclaim)))
+      ((in :last-name exclaim) {:first-name "Bruce" :last-name "Durling"})
       => (functor/->Maybe {:first-name "Bruce" :last-name "Durling!!!!!"})
 
-  (-> {:first-name "Aphyr"}
-      ((in :last-name exclaim)))
+      ((in :last-name exclaim) {:first-name "Aphyr"})
       => (functor/->Maybe nil))
 
 
@@ -40,8 +37,7 @@
         (functor/fmap (partial * 1/60)))))    ; Apply reconstruction
 
 (fact "Lenses can focus on any view of a structure, not just substructures."
-      (-> 3
-          ((minutes (comp functor/->Identity (partial + 60)))))
+      ((minutes (comp functor/->Identity (partial + 60))) 3)
       => (functor/->Identity 4))
 
 
