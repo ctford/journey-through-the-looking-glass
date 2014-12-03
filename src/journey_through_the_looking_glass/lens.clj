@@ -15,9 +15,8 @@
 
 (fact "The In Lens focuses on a key's value."
   (-> {:x 3 :y 2}
-      ((in :x up-to))
-      (get :value))
-      => [{:x 0 :y 2} {:x 1 :y 2} {:x 2 :y 2}])
+      ((in :x up-to)))
+      => (functor/->Sequence [{:x 0 :y 2} {:x 1 :y 2} {:x 2 :y 2}]))
 
 
 (defn exclaim [string]
@@ -25,14 +24,12 @@
 
 (fact "Using the Maybe Functor with a Lens can return nil for the whole. "
   (-> {:first-name "Bruce" :last-name "Durling"}
-      ((in :last-name exclaim))
-      (get :value))
-      => {:first-name "Bruce" :last-name "Durling!!!!!"}
+      ((in :last-name exclaim)))
+      => (functor/->Maybe {:first-name "Bruce" :last-name "Durling!!!!!"})
 
   (-> {:first-name "Aphyr"}
-      ((in :last-name exclaim))
-      (get :value))
-      => nil)
+      ((in :last-name exclaim)))
+      => (functor/->Maybe nil))
 
 
 (defn minutes [f]
@@ -44,9 +41,8 @@
 
 (fact "Lenses can focus on any view of a structure, not just substructures."
       (-> 3
-          ((minutes (comp functor/->Identity (partial + 60))))
-          (get :value))
-      => 4)
+          ((minutes (comp functor/->Identity (partial + 60)))))
+      => (functor/->Identity 4))
 
 
 ; Lens operations
