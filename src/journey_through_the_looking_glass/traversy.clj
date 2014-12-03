@@ -16,19 +16,6 @@
   [x lens f]
   ((:fmap lens) f x))
 
-(def it
-  (lens list (fn [f x] (f x))))
-
-(fact "The 'it' lens is the identity."
-  (-> 9 (view it)) => [9]
-  (-> 9 (update it inc)) => 10)
-
-(def nothing
-  (lens (constantly []) (fn [f x] x)))
-
-(fact "The 'nothing' lens doesn't have a focus."
-  (-> 9 (view nothing)) => []
-  (-> 9 (update nothing inc)) => 9)
 
 (def each
   (lens seq map))
@@ -69,13 +56,24 @@
     (fn [x] (mapcat #(view % inner) (view x outer)))
     (fn [f x] (update x outer #(update % inner f)))))
 
+(def it
+  (lens list (fn [f x] (f x))))
+
+(fact "The 'it' lens is the identity under 'combine'."
+  (-> 9 (view it)) => [9]
+  (-> 9 (update it inc)) => 10)
+
+(defn *>
+  [& lenses]
+  (reduce combine it lenses))
+
 (fact "Lenses combine, but not with function composition."
   (-> {:foo [1 2]}
-      (view (combine (in [:foo]) each)))
+      (view (*> (in [:foo]) each)))
       => [1 2]
 
   (-> {:foo [1 2]}
-      (update (combine (in [:foo]) each) inc))
+      (update (*> (in [:foo]) each) inc))
       => {:foo [2 3]})
 
 
@@ -85,13 +83,24 @@
     (fn [x] (concat (view x one) (view x another)))
     (fn [f x] (-> x (update one f) (update another f)))))
 
+(def nothing
+  (lens (constantly []) (fn [f x] x)))
+
+(fact "The 'nothing' lens is the identity under 'both'."
+  (-> 9 (view nothing)) => []
+  (-> 9 (update nothing inc)) => 9)
+
+(defn +>
+  [& lenses]
+  (reduce both nothing lenses))
+
 (fact "Lenses can be combined in parallel with 'both'."
   (-> {:foo 8 :bar 9}
-      (view (both (in [:foo]) (in [:bar]))))
+      (view (+> (in [:foo]) (in [:bar]))))
       => [8 9]
 
   (-> {:foo 8 :bar 9}
-      (update (both (in [:foo]) (in [:bar])) inc))
+      (update (+> (in [:foo]) (in [:bar])) inc))
       => {:foo 9 :bar 10})
 
 
@@ -106,7 +115,7 @@
 (fact "The 'all-entries' lens focuses on the entries of a map."
   (-> {:foo 3 :bar 4}
       (view all-entries))
-      => (just #{[:foo 3] [:bar 4]})
+      => [[:foo 3] [:bar 4]]
 
   (-> {:foo 3 :bar 4}
       (update all-entries (fn [[k v]] [v k])))
@@ -114,7 +123,7 @@
 
 
 (def all-values
-  (combine all-entries (in [1])))
+  (*> all-entries (in [1])))
 
 (fact "The 'all-values' lens focuses on the values of a map."
   (-> {:foo 1 :bar 2} (view all-values)) => [1 2]
