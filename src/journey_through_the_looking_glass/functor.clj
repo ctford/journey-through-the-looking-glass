@@ -38,7 +38,9 @@
 
 
 (fact "Functors compose like any other functions."
-      (((comp fsequence fmaybe) inc) [1 nil 3]) => [2 nil 4]
+      (((comp fsequence fmaybe) inc) [1 nil 3])
+      => [2 nil 4]
+
       (((comp fsequence (partial fin :x) fmaybe) inc)
        [{:x 1 :y 1} {:x nil :y 1}])
       => [{:x 2 :y 1} {:x nil :y 1}])
