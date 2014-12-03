@@ -39,7 +39,7 @@
 
 (defn fin [k f] (fn [x] (update-in x [k] f)))
 
-(fact "The in Functor applies a function to a key's value within a map."
+(fact "The In Functor applies a function to a key's value within a map."
       ((fin :x inc) {:x 1 :y 1}) => {:x 2 :y 1})
 
 
