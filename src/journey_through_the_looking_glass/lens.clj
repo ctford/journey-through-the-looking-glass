@@ -86,3 +86,9 @@
       (-> 120 (update minutes dec)) => 60
       (-> 120 (put minutes 4)) => 240
       (-> 120 (view minutes)) => 2)
+
+
+(fact "Lenses compose as functions."
+      (-> {:time 1}
+          (update (comp (partial in :time) minutes) inc))
+      => {:time 61})
