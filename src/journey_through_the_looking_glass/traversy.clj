@@ -25,17 +25,6 @@
   (-> [1 2 3] (update each inc)) => [2 3 4])
 
 
-(defn in
-  [path]
-  (lens
-    (fn [x] [(get-in x path)])
-    (fn [f x] (update-in x path f))))
-
-(fact "The 'in' lens focuses into a map based on a path."
-  (-> {:foo 1} (view (in [:foo]))) => [1]
-  (-> {:foo 1} (update (in [:foo]) inc)) => {:foo 2})
-
-
 (defn fsome
   [applicable? f x]
   (map #(if (applicable? %) (f %) %) x))
@@ -47,6 +36,17 @@
 (fact "The 'only' lens focuses on some items in a sequence."
   (-> [1 2 3] (view (only even?))) => [2]
   (-> [1 2 3] (update (only even?) inc)) => [1 3 3])
+
+
+(defn in
+  [path]
+  (lens
+    (fn [x] [(get-in x path)])
+    (fn [f x] (update-in x path f))))
+
+(fact "The 'in' lens focuses into a map based on a path."
+  (-> {:foo 1} (view (in [:foo]))) => [1]
+  (-> {:foo 1} (update (in [:foo]) inc)) => {:foo 2})
 
 
 (defn combine
@@ -67,13 +67,13 @@
   (reduce combine it lenses))
 
 (fact "Lenses combine, but not with function composition."
-  (-> {:foo [1 2]}
-      (view (*> (in [:foo]) each)))
-      => [1 2]
+  (-> {:foo [1 2 3]}
+      (view (*> (in [:foo]) (only odd?))))
+      => [1 3]
 
-  (-> {:foo [1 2]}
-      (update (*> (in [:foo]) each) inc))
-      => {:foo [2 3]})
+  (-> {:foo [1 2 3]}
+      (update (*> (in [:foo]) (only odd?)) inc))
+      => {:foo [2 2 4]})
 
 
 (defn both
