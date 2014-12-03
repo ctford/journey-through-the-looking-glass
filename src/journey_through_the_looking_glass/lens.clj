@@ -7,9 +7,9 @@
 (defn in [k f]
   (fn [m]
     (-> m
-        (get k)                               ; Deconstruct
-        f                                     ; Apply function
-        (functor/fmap (partial assoc m k))))) ; Apply reconstruction
+        (get k)                          ; Deconstruct
+        f                                ; Apply function
+        (functor/fmap #(assoc % m k))))) ; Apply reconstruction
 
 (def up-to (comp functor/->Sequence range))
 
@@ -21,22 +21,26 @@
 (defn exclaim [string]
   (functor/fmap (functor/->Maybe string) #(str % "!!!!!")))
 
-(fact "Using the Maybe Functor with a Lens can return nil for the whole. "
-      ((in :last-name exclaim) {:first-name "Bruce" :last-name "Durling"})
-      => (functor/->Maybe {:first-name "Bruce" :last-name "Durling!!!!!"})
+(fact "Using the Maybe Functor can return nil for the whole. "
+      ((in :last-name exclaim)
+       {:first-name "Bruce" :last-name "Durling"})
+      => (functor/->Maybe
+           {:first-name "Bruce" :last-name "Durling!!!!!"})
 
-      ((in :last-name exclaim) {:first-name "Aphyr"})
-      => (functor/->Maybe nil))
+      ((in :last-name exclaim)
+       {:first-name "Aphyr"})
+      => (functor/->Maybe
+           nil))
 
 
 (defn minutes [f]
   (fn [hours]
     (-> hours
-        (* 60)                                ; Deconstruct
-        f                                     ; Apply function
-        (functor/fmap (partial * 1/60)))))    ; Apply reconstruction
+        (* 60)                           ; Deconstruct
+        f                                ; Apply function
+        (functor/fmap #(/ % 60)))))      ; Apply reconstruction
 
-(fact "Lenses can focus on any view of a structure, not just substructures."
+(fact "Lenses can focus on any view of a structure."
       ((minutes (comp functor/->Identity (partial + 60))) 3)
       => (functor/->Identity 4))
 

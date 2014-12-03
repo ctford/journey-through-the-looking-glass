@@ -4,7 +4,7 @@
 ; Functors
 (defn fsequence [f] (partial map f))
 
-(fact "The Sequence Functor applies a function to each element in the sequence."
+(fact "The Sequence Functor applies a function to each element."
       (inc 1) => 2
       (inc [1 2 3]) => (throws ClassCastException)
       ((fsequence inc) [1 2 3]) => [2 3 4])
@@ -12,7 +12,7 @@
 
 (defn fmaybe [f] (fn [x] (some-> x f)))
 
-(fact "The Maybe Functor only applies a function when a value is present."
+(fact "The Maybe Functor applies a function when there's a value."
       (inc 3) => 4 
       ((fmaybe inc) 3) => 4
       (inc nil) => (throws NullPointerException)
@@ -39,7 +39,7 @@
 
 (defn fin [k f] (fn [x] (update-in x [k] f)))
 
-(fact "The In Functor applies a function to a key's value within a map."
+(fact "The In Functor applies a function to a key's value."
       ((fin :x inc) {:x 1 :y 1}) => {:x 2 :y 1})
 
 
@@ -61,7 +61,7 @@
                      ((fsequence f)) ; Apply function
                      ->Sequence)))   ; Reconstruct
 
-(fact "The Sequence Functor applies a function to each element in the sequence."
+(fact "The Sequence Functor applies a function to each element."
       (fmap (->Sequence [1 2 3]) inc) => (->Sequence [2 3 4]))
 
 
@@ -72,7 +72,7 @@
                      ((fmaybe f))    ; Apply function
                      ->Maybe)))      ; Reconstruct
 
-(fact "The Maybe Functor only applies a function when a value is present."
+(fact "The Maybe Functor applies a function when there's a value."
       (fmap (->Maybe 3) inc) => (->Maybe 4)
       (fmap (->Maybe nil) inc) => (->Maybe nil))
 

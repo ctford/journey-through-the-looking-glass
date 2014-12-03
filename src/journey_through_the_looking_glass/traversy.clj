@@ -2,7 +2,7 @@
   (:require [midje.sweet :refer :all]))
 
 (defn lens
-  "Construct a lens from a focus :: x -> seq and an fmap :: f x -> x."
+  "Construct a lens from a focus and an fmap."
   [focus fmap]
   {:focus focus :fmap fmap})
 
@@ -58,7 +58,7 @@
   [applicable?]
   (lens (partial filter applicable?) (partial fsome applicable?)))
 
-(fact "The 'only' lens focuses on items in a sequence matching a condition."
+(fact "The 'only' lens focuses on some items in a sequence."
   (-> [1 2 3] (view (only even?))) => [2]
   (-> [1 2 3] (update (only even?) inc)) => [1 3 3])
 
@@ -70,8 +70,13 @@
     (fn [f x] (update x outer #(update % inner f)))))
 
 (fact "Lenses combine, but not with function composition."
-  (-> {:foo [1 2]} (view (combine (in [:foo]) each))) => [1 2]
-  (-> {:foo [1 2]} (update (combine (in [:foo]) each) inc)) => {:foo [2 3]})
+  (-> {:foo [1 2]}
+      (view (combine (in [:foo]) each)))
+      => [1 2]
+
+  (-> {:foo [1 2]}
+      (update (combine (in [:foo]) each) inc))
+      => {:foo [2 3]})
 
 
 (defn both

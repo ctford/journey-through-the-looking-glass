@@ -4,8 +4,8 @@ Journey through the looking glass
 Background
 ----------
 
-* Coordination of coarse-grained state is simpler.
-* Composition of fine-grained functions is simpler.
+* I want to coordinate coarse-grained state.
+* I want to compose fine-grained functions.
 * These two goals are in tension.
 
 Standard library
