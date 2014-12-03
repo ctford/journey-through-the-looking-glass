@@ -28,7 +28,8 @@ Functors
 Lenses
 ------
 
-* Lenses are functions that lift functions into a context.
+* Lenses are functions that lift contextualising functions into
+  a context.
 * `update`, `put`, `view` and more can all be represented by a
   single function.
 * Lenses compose as functions.
