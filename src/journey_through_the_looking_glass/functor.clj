@@ -55,12 +55,21 @@
                      ((fsequence f)) ; Apply function
                      ->Sequence)))   ; Reconstruct
 
+(fact "The Sequence Functor applies a function to each element in the sequence."
+      (-> [1 2 3] ->Sequence (fmap inc)) => (->Sequence [2 3 4]))
+
+
 (defrecord Maybe [value]
   Functor
   (fmap [this f] (-> this
                      (get :value)    ; Deconstruct
                      ((fmaybe f))    ; Apply function
                      ->Maybe)))      ; Reconstruct
+
+(fact "The Maybe Functor only applies a function when a value is present."
+      (-> 3 ->Maybe (fmap inc)) => (->Maybe 4)
+      (-> nil ->Maybe (fmap inc)) => (->Maybe nil))
+
 
 (defrecord Identity [value]
   Functor
@@ -69,9 +78,16 @@
                      ((fidentity f)) ; Apply function
                      ->Identity)))   ; Reconstruct
 
+(fact "The Identity Functor applies a function to a value."
+      (-> 3 ->Identity (fmap inc)) => (->Identity 4))
+
+
 (defrecord Constant [value]
   Functor
   (fmap [this f] (-> this
                      (get :value)    ; Deconstruct
                      ((fconstant f)) ; Apply function
                      ->Constant)))   ; Reconstruct
+
+(fact "The Constant Functor ignores any applied function."
+      (-> 1 ->Constant (fmap inc)) => (->Constant 1))
