@@ -11,10 +11,7 @@
         f                                     ; Apply function
         (functor/fmap (partial assoc m k))))) ; Apply reconstruction
 
-(defn up-to [n]
-  (-> n
-      range
-      functor/->Sequence))
+(def up-to (comp functor/->Sequence range))
 
 (fact "The In Lens focuses on a key's value."
   (-> {:x 3 :y 2}
