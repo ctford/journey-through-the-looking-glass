@@ -31,12 +31,6 @@
       ((fconstant inc) 1) => 1)
 
 
-(defn ffunction [f] (partial comp f))
-
-(fact "The Function Functor composes functions together."
-      (((ffunction identity) inc) 1) => 2)
-
-
 (defn fin [k f] (fn [x] (update-in x [k] f)))
 
 (fact "The In Functor applies a function to a key's value."
