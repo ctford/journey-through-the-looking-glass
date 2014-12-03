@@ -6,7 +6,7 @@ Background
 
 * I want to coordinate coarse-grained state.
 * I want to compose fine-grained functions.
-* These two goals are in tension.
+* These two ideals are in tension.
 
 Standard library
 ----------------
