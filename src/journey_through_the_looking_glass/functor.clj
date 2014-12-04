@@ -10,13 +10,13 @@
       ((fsequence inc) [1 2 3]) => [2 3 4])
 
 
-(defn fidentity [f] (identity f))
+(defn fidentity [f] f)
 
 (fact "The Identity Functor applies a function to a value."
       ((fidentity inc) 3) => 4)
 
 
-(defn fconstant [f] identity)
+(defn fconstant [_] identity)
 
 (fact "The Constant Functor ignores any applied function."
       ((fconstant inc) 1) => 1)
