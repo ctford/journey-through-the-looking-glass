@@ -25,20 +25,6 @@
   (-> [1 2 3] (update each inc)) => [2 3 4])
 
 
-(defn fsome
-  [applicable? f x]
-  (if (applicable? x) (f x) x))
-
-(defn is [applicable?]
-  (lens #(filter applicable? [%]) (partial fsome applicable?)))
-
-(defn only [applicable?] (*> each (is applicable?)))
-
-(fact "The 'only' lens focuses on some items in a sequence."
-  (-> [1 2 3] (view (only even?))) => [2]
-  (-> [1 2 3] (update (only even?) inc)) => [1 3 3])
-
-
 (defn in
   [path]
   (lens
@@ -69,12 +55,33 @@
 
 (fact "Lenses combine, but not with function composition."
   (-> {:foo [1 2 3]}
-      (view (*> (in [:foo]) (only odd?))))
-      => [1 3]
+      (view (*> (in [:foo]) each)))
+      => [1 2 3]
 
   (-> {:foo [1 2 3]}
-      (update (*> (in [:foo]) (only odd?)) inc))
-      => {:foo [2 2 4]})
+      (update (*> (in [:foo]) each) inc))
+      => {:foo [2 3 4]})
+
+
+(defn fsome
+  [applicable? f x]
+  (if (applicable? x) (f x) x))
+
+(defn is [applicable?]
+  (lens #(filter applicable? [%]) (partial fsome applicable?)))
+
+(fact "The 'is' lens optionally focuses based on a predicate."
+  (-> -7 (view (is neg?))) => [-7]
+  (-> -7 (update (is neg?) -)) => 7
+  (-> -7 (view (is pos?))) => []
+  (-> -7 (update (is pos?) -)) => -7)
+
+
+(defn only [applicable?] (*> each (is applicable?)))
+
+(fact "The 'only' lens focuses on some items in a sequence."
+  (-> [1 2 3] (view (only even?))) => [2]
+  (-> [1 2 3] (update (only even?) inc)) => [1 3 3])
 
 
 (defn both
@@ -95,19 +102,17 @@
   (reduce both nothing lenses))
 
 (fact "Lenses can be combined in parallel with 'both'."
-  (-> {:foo 8 :bar 9}
+  (-> {:foo 8 :bar 9 :baz 14}
       (view (+> (in [:foo]) (in [:bar]))))
       => [8 9]
 
-  (-> {:foo 8 :bar 9}
+  (-> {:foo 8 :bar 9 :baz 14}
       (update (+> (in [:foo]) (in [:bar])) inc))
-      => {:foo 9 :bar 10})
+      => {:foo 9 :bar 10 :baz 14})
 
 
 (defn map-conj [f x]
-  (->> x
-       (map f)
-       (reduce conj {})))
+  (->> x seq (map f) (reduce conj {})))
 
 (def all-entries
   (lens seq map-conj))
