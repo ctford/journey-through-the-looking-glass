@@ -10,15 +10,6 @@
       ((fsequence inc) [1 2 3]) => [2 3 4])
 
 
-(defn fmaybe [f] (fn [x] (some-> x f)))
-
-(fact "The Maybe Functor applies a function when there's a value."
-      (inc 3) => 4 
-      ((fmaybe inc) 3) => 4
-      (inc nil) => (throws NullPointerException)
-      ((fmaybe inc) nil) => nil)
-
-
 (defn fidentity [f] (identity f))
 
 (fact "The Identity Functor applies a function to a value."
@@ -38,58 +29,37 @@
 
 
 (fact "Functors compose like any other functions."
-      (((comp fsequence fmaybe) inc) [1 nil 3])
-      => [2 nil 4]
+      (((comp fsequence (partial fin 0)) inc)
+       [[1 1] [2 2] [3 3]])
+      => [[2 1] [3 2] [4 3]]
 
-      (((comp fsequence (partial fin :x) fmaybe) inc)
-       [{:x 1 :y 1} {:x nil :y 1}])
-      => [{:x 2 :y 1} {:x nil :y 1}])
+      (((comp fsequence (partial fin :x) fsequence) inc)
+       [{:x [1 2 3] :y 1} {:x [2 3 4] :y 1}])
+      => [{:x [2 3 4] :y 1} {:x [3 4 5] :y 1}])
 
 
 ; Functor polymorphism
 (defprotocol Functor
   (fmap [this f]))
 
-(defrecord Sequence [value]
+(defrecord FunctorObject [functor value]
   Functor
-  (fmap [this f] (-> this
-                     (get :value)    ; Deconstruct
-                     ((fsequence f)) ; Apply function
-                     ->Sequence)))   ; Reconstruct
+  (fmap
+    [this f]
+    (-> this
+        (get :value)                           ; Deconstruct
+        ((functor f))                          ; Apply function
+        ((partial ->FunctorObject functor))))) ; Reconstruct
+
+(def ->Sequence (partial ->FunctorObject fsequence))
+(def ->Identity (partial ->FunctorObject fidentity))
+(def ->Constant (partial ->FunctorObject fconstant))
 
 (fact "The Sequence Functor applies a function to each element."
       (fmap (->Sequence [1 2 3]) inc) => (->Sequence [2 3 4]))
 
-
-(defrecord Maybe [value]
-  Functor
-  (fmap [this f] (-> this
-                     (get :value)    ; Deconstruct
-                     ((fmaybe f))    ; Apply function
-                     ->Maybe)))      ; Reconstruct
-
-(fact "The Maybe Functor applies a function when there's a value."
-      (fmap (->Maybe 3) inc) => (->Maybe 4)
-      (fmap (->Maybe nil) inc) => (->Maybe nil))
-
-
-(defrecord Identity [value]
-  Functor
-  (fmap [this f] (-> this
-                     (get :value)    ; Deconstruct
-                     ((fidentity f)) ; Apply function
-                     ->Identity)))   ; Reconstruct
-
 (fact "The Identity Functor applies a function to a value."
       (fmap (->Identity 3) inc) => (->Identity 4))
-
-
-(defrecord Constant [value]
-  Functor
-  (fmap [this f] (-> this
-                     (get :value)    ; Deconstruct
-                     ((fconstant f)) ; Apply function
-                     ->Constant)))   ; Reconstruct
 
 (fact "The Constant Functor ignores any applied function."
       (fmap (->Constant 1) inc) => (->Constant 1))

@@ -27,29 +27,6 @@
             {:position [1 0], :class "Wizard"}]))
 
 
-(def apply-tax (partial * 1.10))
-
-(defn number!?!?!
-  [string]
-  (functor/->Maybe
-    (try
-      (Integer/parseInt string)
-      (catch Exception e))))
-
-(fact "Using the Maybe Functor can return nil for the whole. "
-      (-> {:price "90" :currency "AUD"}
-          ((in :price number!?!?!))
-          (functor/fmap :price)
-          (functor/fmap apply-tax))
-      => (functor/->Maybe 99.00000000000001)
-
-      (-> {:price "foobar" :currency "AUD"}
-          ((in :price number!?!?!))
-          (functor/fmap :price)
-          (functor/fmap apply-tax))
-      => (functor/->Maybe nil))
-
-
 (defn minutes [f]
   (fn [seconds]
     (-> seconds
