@@ -27,11 +27,12 @@
 
 (defn fsome
   [applicable? f x]
-  (map #(if (applicable? %) (f %) %) x))
+  (if (applicable? x) (f x) x))
 
-(defn only
-  [applicable?]
-  (lens (partial filter applicable?) (partial fsome applicable?)))
+(defn is [applicable?]
+  (lens #(filter applicable? [%]) (partial fsome applicable?)))
+
+(defn only [applicable?] (*> each (is applicable?)))
 
 (fact "The 'only' lens focuses on some items in a sequence."
   (-> [1 2 3] (view (only even?))) => [2]
