@@ -14,7 +14,11 @@
 
 (defn fminutes
   [f]
-  (fn [x] (-> x (/ 60) f (* 60))) )
+  (fn [x]
+    (-> x
+        (/ 60)    ; convert seconds into minutes
+        f         ; apply the function
+        (* 60)))) ; convert minutes back into seconds
 
 (fact "The Minutes Functor applies a function to the minutes of an epoch."
       ((fminutes maths/increment) 1) => 61)
