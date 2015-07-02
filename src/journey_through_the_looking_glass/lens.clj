@@ -18,7 +18,7 @@
 ; Lens operations
 (defn update
   [x lens f]
-  (lens (fn [f] (fn [x] (f x))) f x))
+  (lens identity f x))
 
 (defn set
   [x lens value]
