@@ -26,17 +26,16 @@
   [x lens]
   (lens (constantly identity) identity x))
 
-(defn compose
-  [outer inner]
-  (fn [functor f x]
-    (outer functor (partial inner functor f) x)))
-
-
 (fact "The minutes lens supports the lens operations."
       (update 120 minutes maths/increment) => 180
       (set 120 minutes 4) => 240
       (get 120 minutes) => 2)
 
+
+(defn compose
+  [outer inner]
+  (fn [functor f x]
+    (outer functor (partial inner functor f) x)))
 
 (def hours (compose minutes minutes))
 
