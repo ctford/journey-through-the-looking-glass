@@ -6,11 +6,11 @@
 
 ; Lenses
 (defn minutes
-  [fmap f x]
+  [functor f x]
   (-> x
-      (/ 60)               ; convert seconds into minutes
-      f                    ; apply the function
-      ((fmap #(* % 60))))) ; convert minutes back into seconds
+      (/ 60)                  ; convert seconds into minutes
+      f                       ; apply the function
+      ((functor #(* % 60))))) ; convert minutes back into seconds
 
 
 ; Lens operations
@@ -27,12 +27,12 @@
   (lens (constantly identity) identity x))
 
 (defn compose
-  [l1 l2]
-  (fn [fmap f x]
-    (l1 fmap (partial l2 fmap f) x)))
+  [outer inner]
+  (fn [functor f x]
+    (outer functor (partial inner functor f) x)))
 
 
-(fact "The Minutes Lens supports the Lens operations."
+(fact "The minutes lens supports the lens operations."
       (update 120 minutes maths/increment) => 180
       (set 120 minutes 4) => 240
       (get 120 minutes) => 2)

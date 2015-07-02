@@ -8,7 +8,7 @@
   [f]
   (fn [x] (map f x)))
 
-(fact "The Sequence Functor applies a function to each element in a sequence."
+(fact "The sequence functor applies a function to each element in a sequence."
       ((fsequence maths/increment) [1 2 3]) => [2 3 4])
 
 
@@ -20,7 +20,7 @@
         f         ; apply the function
         (* 60)))) ; convert minutes back into seconds
 
-(fact "The Minutes Functor applies a function to the minutes of an epoch."
+(fact "The minutes functor applies a function to the minutes of an epoch."
       ((fminutes maths/increment) 1) => 61)
 
 
