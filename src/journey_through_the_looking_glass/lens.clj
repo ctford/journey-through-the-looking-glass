@@ -1,5 +1,5 @@
 (ns journey-through-the-looking-glass.lens
-  (:require 
+  (:require
     [journey-through-the-looking-glass.functor :as functor]
     [midje.sweet :refer :all]))
 
