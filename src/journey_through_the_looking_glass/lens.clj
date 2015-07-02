@@ -5,53 +5,45 @@
 
 ; Lenses
 (defn in [k f]
-  (fn [m]
-    (-> m
-        (get k)                            ; Deconstruct
-        f                                  ; Apply function
-        (functor/fmap #(assoc m k %)))))   ; Apply reconstruction
-
-(defn adjacent
-  [[x y]]
-  (functor/->Sequence
-    [[x (inc y)] [(inc x) y]
-     [(dec x) y] [x (dec y)]]))
-
-(fact "The In Lens focuses on a key's value."
-      (-> {:position [1 1] :class "Wizard"}
-          ((in :position adjacent)))
-      => (functor/->Sequence
-           [{:position [1 2], :class "Wizard"}
-            {:position [2 1], :class "Wizard"}
-            {:position [0 1], :class "Wizard"}
-            {:position [1 0], :class "Wizard"}]))
-
+  (fn [fmap]
+    (fn [m]
+      (let [map->value #(get % k)
+            value->map #(assoc m k %)]
+      (-> m
+          map->value                       ; Deconstruct
+          f                                ; Apply function
+          ((fmap value->map)))))))         ; Apply reconstruction
 
 (defn minutes [f]
-  (fn [seconds]
-    (-> seconds
-        (/ 60)                             ; Deconstruct
-        f                                  ; Apply function
-        (functor/fmap (partial * 60)))))   ; Apply reconstruction
+  (fn [fmap]
+    (fn [seconds]
+      (let [seconds->minutes #(/ % 60)
+            minutes->seconds #(* % 60)]
+      (-> seconds
+          seconds->minutes                 ; Deconstruct
+          f                                ; Apply function
+          ((fmap minutes->seconds)))))))   ; Apply reconstruction
 
 (fact "Lenses can focus on any view of a structure."
-      ((minutes (comp functor/->Identity inc)) 1)
-      => (functor/->Identity 61))
+      (((minutes inc) functor/fidentity) 60)
+      => 120)
 
 
 ; Lens operations
 (defn update [x lens f]
-  (-> x
-      ((lens (comp functor/->Identity f)))
-      (get :value)))
+  (((lens f) functor/fidentity) x))
 
 (defn put [x lens value]
   (update x lens (constantly value)))
 
 (defn view [x lens]
-  (-> x
-      ((lens functor/->Constant))
-      (get :value)))
+  (((lens identity) functor/fconstant) x))
+
+(defn compose [l1 l2]
+  (fn [f]
+    (fn [fmap]
+      (let [inner-f ((l2 f) fmap)]
+        ((l1 inner-f) fmap)))))
 
 
 (fact "The In Lens supports the Lens operations."
@@ -65,7 +57,7 @@
       (-> 120 (view minutes)) => 2)
 
 
-(fact "Lenses compose as functions."
+(fact "Lenses compose."
       (-> {:time 1}
-          (update (comp (partial in :time) minutes) inc))
+          (update (compose (partial in :time) minutes) inc))
       => {:time 61})

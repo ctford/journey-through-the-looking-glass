@@ -44,30 +44,3 @@
       (((comp fsequence (partial fin :x) fsequence) inc)
        [{:x [1 2 3] :y 1} {:x [2 3 4] :y 1}])
       => [{:x [2 3 4] :y 1} {:x [3 4 5] :y 1}])
-
-
-; Functor polymorphism
-(defprotocol Functor
-  (fmap [this f]))
-
-(defrecord FunctorObject [functor value]
-  Functor
-  (fmap
-    [this f]
-    (-> this
-        (get :value)                           ; Deconstruct
-        ((functor f))                          ; Apply function
-        ((partial ->FunctorObject functor))))) ; Reconstruct
-
-(def ->Sequence (partial ->FunctorObject fsequence))
-(def ->Identity (partial ->FunctorObject fidentity))
-(def ->Constant (partial ->FunctorObject fconstant))
-
-(fact "The Sequence Functor applies a function to each element."
-      (fmap (->Sequence [1 2 3]) inc) => (->Sequence [2 3 4]))
-
-(fact "The Identity Functor applies a function to a value."
-      (fmap (->Identity 3) inc) => (->Identity 4))
-
-(fact "The Constant Functor ignores any applied function."
-      (fmap (->Constant 1) inc) => (->Constant 1))
