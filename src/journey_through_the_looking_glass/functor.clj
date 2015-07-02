@@ -2,7 +2,9 @@
   (:require [midje.sweet :refer :all]))
 
 ; Functors
-(defn fsequence [f] (partial map f))
+(defn fsequence
+  [f]
+  (fn [x] (map f x)))
 
 (fact "The Sequence Functor applies a function to each element."
       (inc 1) => 2
@@ -10,19 +12,25 @@
       ((fsequence inc) [1 2 3]) => [2 3 4])
 
 
-(defn fidentity [f] f)
+(defn fidentity
+  [f]
+  (fn [x] (f x)))
 
 (fact "The Identity Functor applies a function to a value."
       ((fidentity inc) 3) => 4)
 
 
-(defn fconstant [_] identity)
+(defn fconstant
+  [f]
+  (fn [x] x))
 
 (fact "The Constant Functor ignores any applied function."
       ((fconstant inc) 1) => 1)
 
 
-(defn fin [k f] (fn [x] (update-in x [k] f)))
+(defn fin
+  [k f]
+  (fn [x] (update-in x [k] f)))
 
 (fact "The In Functor applies a function to a key's value."
       ((fin :x inc) {:x 1 :y 1}) => {:x 2 :y 1})
