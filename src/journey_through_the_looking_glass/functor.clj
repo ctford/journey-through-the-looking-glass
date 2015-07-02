@@ -12,22 +12,6 @@
       ((fsequence inc) [1 2 3]) => [2 3 4])
 
 
-(defn fidentity
-  [f]
-  (fn [x] (f x)))
-
-(fact "The Identity Functor applies a function to a value."
-      ((fidentity inc) 3) => 4)
-
-
-(defn fconstant
-  [f]
-  (fn [x] x))
-
-(fact "The Constant Functor ignores any applied function."
-      ((fconstant inc) 1) => 1)
-
-
 (defn fin
   [k f]
   (fn [x] (update-in x [k] f)))

@@ -31,13 +31,13 @@
 
 ; Lens operations
 (defn update [x lens f]
-  (((lens f) functor/fidentity) x))
+  (((lens f) (fn [f] (fn [x] (f x)))) x))
 
 (defn put [x lens value]
   (update x lens (constantly value)))
 
 (defn view [x lens]
-  (((lens identity) functor/fconstant) x))
+  (((lens identity) (constantly identity)) x))
 
 (defn compose [l1 l2]
   (fn [f]
