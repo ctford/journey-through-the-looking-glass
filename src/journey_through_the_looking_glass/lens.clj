@@ -6,20 +6,19 @@
 
 ; Lenses
 (defn minutes
-  [fmap f]
-  (fn [seconds]
+  [fmap f x]
     (let [seconds->minutes #(/ % 60)
           minutes->seconds #(* % 60)]
-      (-> seconds
+      (-> x
           seconds->minutes                 ; Deconstruct
           f                                ; Apply function
-          ((fmap minutes->seconds))))))   ; Apply reconstruction
+          ((fmap minutes->seconds)))))     ; Apply reconstruction
 
 
 ; Lens operations
 (defn update
   [x lens f]
-  ((lens (fn [f] (fn [x] (f x))) f) x))
+  (lens (fn [f] (fn [x] (f x))) f x))
 
 (defn set
   [x lens value]
@@ -27,12 +26,12 @@
 
 (defn get
   [x lens]
-  ((lens (constantly identity) identity) x))
+  (lens (constantly identity) identity x))
 
 (defn compose
   [l1 l2]
-  (fn [fmap f]
-    (l1 fmap (l2 fmap f))))
+  (fn [fmap f x]
+    (l1 fmap (partial l2 fmap f) x)))
 
 
 (fact "The Minutes Lens supports the Lens operations."
