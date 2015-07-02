@@ -26,6 +26,6 @@
 
 (def fsequence-of-sequences (comp fsequence fsequence))
 
-(fact "Functors compose like any other functions."
+(fact "Functors compose."
       ((fsequence-of-sequences maths/increment) [[1 1] [2 2] [3 3]])
           => [[2 2] [3 3] [4 4]])
