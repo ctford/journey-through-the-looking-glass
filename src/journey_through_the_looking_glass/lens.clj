@@ -1,5 +1,6 @@
 (ns journey-through-the-looking-glass.lens
   (:require
+    [journey-through-the-looking-glass.maths :as maths]
     [journey-through-the-looking-glass.functor :as functor]
     [midje.sweet :refer :all])
   (:refer-clojure :exclude [get set]))
@@ -16,7 +17,7 @@
           ((fmap minutes->seconds)))))))   ; Apply reconstruction
 
 (fact "Lenses can focus on any view of a structure."
-      (((minutes inc) functor/fidentity) 60)
+      (((minutes maths/increment) functor/fidentity) 60)
       => 120)
 
 
@@ -46,6 +47,6 @@
 (def hours (compose minutes minutes))
 
 (fact "Lenses compose."
-      (-> 7200 (update hours dec)) => 3600
+      (-> 7200 (update hours maths/increment)) => 10800
       (-> 7200 (set hours 4)) => 14400
       (-> 7200 (get hours)) => 2)

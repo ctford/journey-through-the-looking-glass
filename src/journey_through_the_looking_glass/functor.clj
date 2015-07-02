@@ -1,19 +1,15 @@
 (ns journey-through-the-looking-glass.functor
-  (:require [midje.sweet :refer :all]))
+  (:require
+    [journey-through-the-looking-glass.maths :as maths]
+    [midje.sweet :refer :all]))
 
 ; Functors
 (defn fsequence
   [f]
   (fn [x] (map f x)))
 
-(fact "inc adds one to an integer"
-      (inc 1) => 2)
-
-(fact "inc doesn't work on sequences."
-      (inc [1 2 3]) => (throws ClassCastException))
-
 (fact "The Sequence Functor applies a function to each element in a sequence."
-      ((fsequence inc) [1 2 3]) => [2 3 4])
+      ((fsequence maths/increment) [1 2 3]) => [2 3 4])
 
 
 (defn fminutes
@@ -21,9 +17,11 @@
   (fn [x] (-> x (/ 60) f (* 60))) )
 
 (fact "The Minutes Functor applies a function to the minutes of an epoch."
-      ((fminutes inc) 1) => 61)
+      ((fminutes maths/increment) 1) => 61)
 
+
+(def fsequence-of-sequences (comp fsequence fsequence))
 
 (fact "Functors compose like any other functions."
-      (((comp fsequence fsequence) inc) [[1 1] [2 2] [3 3]])
+      ((fsequence-of-sequences maths/increment) [[1 1] [2 2] [3 3]])
           => [[2 2] [3 3] [4 4]])
