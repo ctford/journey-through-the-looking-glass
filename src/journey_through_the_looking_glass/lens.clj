@@ -1,19 +1,10 @@
 (ns journey-through-the-looking-glass.lens
   (:require
     [journey-through-the-looking-glass.functor :as functor]
-    [midje.sweet :refer :all]))
+    [midje.sweet :refer :all])
+  (:refer-clojure :exclude [get set]))
 
 ; Lenses
-(defn in [k f]
-  (fn [fmap]
-    (fn [m]
-      (let [map->value #(get % k)
-            value->map #(assoc m k %)]
-      (-> m
-          map->value                       ; Deconstruct
-          f                                ; Apply function
-          ((fmap value->map)))))))         ; Apply reconstruction
-
 (defn minutes [f]
   (fn [fmap]
     (fn [seconds]
@@ -33,10 +24,10 @@
 (defn update [x lens f]
   (((lens f) (fn [f] (fn [x] (f x)))) x))
 
-(defn put [x lens value]
+(defn set [x lens value]
   (update x lens (constantly value)))
 
-(defn view [x lens]
+(defn get [x lens]
   (((lens identity) (constantly identity)) x))
 
 (defn compose [l1 l2]
@@ -46,18 +37,15 @@
         ((l1 inner-f) fmap)))))
 
 
-(fact "The In Lens supports the Lens operations."
-      (-> {:x 1 :y 2} (update (partial in :x) inc)) => {:x 2 :y 2}
-      (-> {:x 1 :y 2} (put (partial in :x) 99)) => {:x 99 :y 2}
-      (-> {:x 1 :y 2} (view (partial in :x))) => 1)
-
 (fact "The Minutes Lens supports the Lens operations."
       (-> 120 (update minutes dec)) => 60
-      (-> 120 (put minutes 4)) => 240
-      (-> 120 (view minutes)) => 2)
+      (-> 120 (set minutes 4)) => 240
+      (-> 120 (get minutes)) => 2)
 
+
+(def hours (compose minutes minutes))
 
 (fact "Lenses compose."
-      (-> {:time 1}
-          (update (compose (partial in :time) minutes) inc))
-      => {:time 61})
+      (-> 7200 (update hours dec)) => 3600
+      (-> 7200 (set hours 4)) => 14400
+      (-> 7200 (get hours)) => 2)
