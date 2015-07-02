@@ -6,15 +6,16 @@
   (:refer-clojure :exclude [get set]))
 
 ; Lenses
-(defn minutes [f]
+(defn minutes
+  [f]
   (fn [fmap]
     (fn [seconds]
       (let [seconds->minutes #(/ % 60)
             minutes->seconds #(* % 60)]
-      (-> seconds
-          seconds->minutes                 ; Deconstruct
-          f                                ; Apply function
-          ((fmap minutes->seconds)))))))   ; Apply reconstruction
+        (-> seconds
+            seconds->minutes                 ; Deconstruct
+            f                                ; Apply function
+            ((fmap minutes->seconds)))))))   ; Apply reconstruction
 
 (fact "Lenses can focus on any view of a structure."
       (((minutes maths/increment) functor/fidentity) 60)
@@ -22,20 +23,23 @@
 
 
 ; Lens operations
-(defn update [x lens f]
+(defn update
+  [x lens f]
   (((lens f) (fn [f] (fn [x] (f x)))) x))
 
-(defn set [x lens value]
+(defn set
+  [x lens value]
   (update x lens (constantly value)))
 
-(defn get [x lens]
+(defn get
+  [x lens]
   (((lens identity) (constantly identity)) x))
 
-(defn compose [l1 l2]
+(defn compose
+  [l1 l2]
   (fn [f]
     (fn [fmap]
-      (let [inner-f ((l2 f) fmap)]
-        ((l1 inner-f) fmap)))))
+      ((l1 ((l2 f) fmap)) fmap))))
 
 
 (fact "The Minutes Lens supports the Lens operations."

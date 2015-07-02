@@ -1,6 +1,7 @@
 (ns journey-through-the-looking-glass.maths
   (:require [midje.sweet :refer :all]))
 
+
 (defn increment
   [x]
   (+ 1 x))
@@ -12,7 +13,9 @@
       (increment [1 2 3]) => (throws ClassCastException))
 
 
-(def double-increment (comp increment increment))
+(defn double-increment
+  [x]
+  ((comp increment increment) x))
 
 (fact "double-increment adds two to an integer."
       (double-increment 1) => 3)
