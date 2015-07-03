@@ -16,7 +16,7 @@
 ; Lens operations
 (defn update
   [x lens f]
-  (lens identity f x))
+  (lens functor/fidentity f x))
 
 (defn set
   [x lens value]
@@ -24,7 +24,7 @@
 
 (defn get
   [x lens]
-  (lens (constantly identity) identity x))
+  (lens functor/fconstant identity x))
 
 (fact "The minutes lens supports the lens operations."
       (update 120 minutes maths/increment) => 180

@@ -29,3 +29,19 @@
 (fact "Functors compose."
       ((fsequence-of-sequences maths/increment) [[1 1] [2 2] [3 3]])
           => [[2 2] [3 3] [4 4]])
+
+
+(defn fidentity
+  [f]
+  f)
+
+(fact "The identity functor does nothing to the supplied function."
+      ((fidentity inc) 1) => 2)
+
+
+(defn fconstant
+  [f]
+  (fn [x] x))
+
+(fact "The constant functor turns a function into one that does nothing."
+      ((fconstant inc) 1) => 1)
