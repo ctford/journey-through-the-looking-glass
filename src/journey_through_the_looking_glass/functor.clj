@@ -55,3 +55,15 @@
 
 (fact "The constant functor leaves the value untouched."
       (fconstant maths/increment 1) => 1)
+
+
+(defn fmaybe
+  "The maybe functor."
+  [f x]
+  (when-not (nil? x)
+    (f x)))
+
+(fact "The maybe functor only applies a function when the value isn't nil."
+      (maths/increment nil) => (throws NullPointerException)
+      (fmaybe maths/increment nil) => nil
+      (fmaybe maths/increment 1) => 2)
