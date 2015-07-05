@@ -23,8 +23,8 @@
       (fminutes maths/increment 1) => 61)
 
 
-(defn combine [functor-1 functor-2]
-  (fn [f x] (functor-1 (partial functor-2 f) x)))
+(defn combine [outer inner]
+  (fn [f x] (outer (partial inner f) x)))
 
 (def fsequence-of-sequences (combine fsequence fsequence))
 

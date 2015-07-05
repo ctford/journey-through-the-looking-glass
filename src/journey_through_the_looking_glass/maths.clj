@@ -2,6 +2,10 @@
   (:require [midje.sweet :refer :all]))
 
 
+(fact "The function always goes at the front."
+      (+ 1 1) => 2)
+
+
 (defn increment
   [x]
   (+ 1 x))
