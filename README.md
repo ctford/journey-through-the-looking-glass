@@ -12,7 +12,7 @@ Functors
 --------
 
 * "Functors are structure-preserving maps between Categories" - Barr and Wells.
-* Functors are particular strategies for applying functions.
+* Functors represent different strategies for applying functions.
 * Functors compose.
 
 Lenses
@@ -33,7 +33,7 @@ Traversals
 Traversy
 --------
 
-* Uses building blocks from Clojure/core.
+* Uses building blocks from Clojure's standard library.
 * Has a rich set of lenses for Clojure's standard datatypes.
 * Lacks the full power/complexity of pure Lenses and Traversals.
 * Traversy's lenses compose.
