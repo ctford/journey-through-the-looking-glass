@@ -7,6 +7,7 @@
 
 ; Lenses
 (defn minutes
+  "A lens that focuses on the minutes of an epoch."
   [functor f x]
   (-> x
       (* 1/60)                        ; convert seconds into minutes
@@ -49,11 +50,14 @@
 
 
 (defn compose
+  "Compose two lenses to make a new one."
   [outer inner]
   (fn [functor f x]
     (outer functor (partial inner functor f) x)))
 
-(def hours (compose minutes minutes))
+(def hours
+  "A lens that focuses on the hours of an epoch."
+  (compose minutes minutes))
 
 (fact "Lenses compose."
       (update 7200 hours maths/increment) => 10800
