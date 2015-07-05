@@ -7,6 +7,7 @@
 
 
 (defn increment
+  "A Clojure equivalent of '++'."
   [x]
   (+ 1 x))
 
@@ -17,12 +18,18 @@
       (increment [1 2 3]) => (throws ClassCastException))
 
 
-(defn double-increment
+(defn reciprocal
+  "Take the reciprocal of a fraction."
   [x]
-  (increment (increment x)))
+  (if-not (zero? x)
+    (/ 1 x)
+    nil))
 
-(fact "double-increment adds two to an integer."
-      (double-increment 1) => 3)
+(fact "reciprocal flips fractions"
+      (reciprocal 0) => nil
+      (reciprocal 1) => 1
+      (reciprocal 1/2) => 2
+      (reciprocal 3) => 1/3)
 
-(fact "double-increment doesn't work on sequences either."
-      (double-increment [1 2 3]) => (throws ClassCastException))
+(fact "reciprocal doesn't work on sequences either."
+      (reciprocal [1 2 3]) => (throws ClassCastException))

@@ -16,14 +16,17 @@
 
 ; Lens operations
 (defn update
+  "Update the focus of the lens with the function f."
   [x lens f]
   (lens functor/fidentity f x))
 
 (defn set
+  "Set the value at the focus of the lens."
   [x lens value]
   (update x lens (constantly value)))
 
 (defn get
+  "Get the value at the focus of the lens."
   [x lens]
   (lens functor/fconstant identity x))
 
@@ -31,6 +34,18 @@
       (update 120 minutes maths/increment) => 180
       (set 120 minutes 4) => 240
       (get 120 minutes) => 2)
+
+
+
+(defn try-and-update
+  "Update the focus of the lens, tolerating the result being nil."
+  [x lens f]
+  (lens functor/fmaybe f x))
+
+(fact "try-and-update is like update, but nil-safe."
+      (update 0 minutes maths/reciprocal) => (throws NullPointerException)
+      (try-and-update 0 minutes maths/reciprocal) => nil
+      (try-and-update 120 minutes maths/reciprocal) => 30)
 
 
 (defn compose
