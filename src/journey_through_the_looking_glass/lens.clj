@@ -9,9 +9,9 @@
 (defn minutes
   [functor f x]
   (-> x
-      (/ 60)                  ; convert seconds into minutes
-      f                       ; apply the function
-      ((functor #(* % 60))))) ; convert minutes back into seconds
+      (* 1/60)                        ; convert seconds into minutes
+      f                               ; apply the function
+      ((partial functor #(* % 60))))) ; convert minutes back into seconds
 
 
 ; Lens operations

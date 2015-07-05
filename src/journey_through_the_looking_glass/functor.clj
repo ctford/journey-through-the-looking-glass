@@ -5,43 +5,45 @@
 
 ; Functors
 (defn fsequence
-  [f]
-  (fn [x] (map f x)))
+  [f x]
+  (map f x))
 
 (fact "The sequence functor applies a function to each element in a sequence."
-      ((fsequence maths/increment) [1 2 3]) => [2 3 4])
+      (fsequence maths/increment [1 2 3]) => [2 3 4])
 
 
 (defn fminutes
-  [f]
-  (fn [x]
-    (-> x
-        (/ 60)    ; convert seconds into minutes
-        f         ; apply the function
-        (* 60)))) ; convert minutes back into seconds
+  [f x]
+  (-> x
+      (* 1/60) ; convert seconds into minutes
+      f        ; apply the function
+      (* 60))) ; convert minutes back into seconds
 
 (fact "The minutes functor applies a function to the minutes of an epoch."
-      ((fminutes maths/increment) 1) => 61)
+      (fminutes maths/increment 1) => 61)
 
 
-(def fsequence-of-sequences (comp fsequence fsequence))
+(defn combine [functor-1 functor-2]
+  (fn [f x] (functor-1 (partial functor-2 f) x)))
+
+(def fsequence-of-sequences (combine fsequence fsequence))
 
 (fact "Functors compose."
-      ((fsequence-of-sequences maths/increment) [[1 1] [2 2] [3 3]])
-          => [[2 2] [3 3] [4 4]])
+      (fsequence-of-sequences maths/increment [[1 1] [2 2] [3 3]])
+      => [[2 2] [3 3] [4 4]])
 
 
 (defn fidentity
-  [f]
-  f)
+  [f x]
+  (f x))
 
-(fact "The identity functor does nothing to the supplied function."
-      ((fidentity inc) 1) => 2)
+(fact "The identity functor applies the function normally."
+      (fidentity inc 1) => 2)
 
 
 (defn fconstant
-  [f]
-  (fn [x] x))
+  [f x]
+  x)
 
-(fact "The constant functor turns a function into one that does nothing."
-      ((fconstant inc) 1) => 1)
+(fact "The constant functor leaves the value untouched."
+      (fconstant inc 1) => 1)
