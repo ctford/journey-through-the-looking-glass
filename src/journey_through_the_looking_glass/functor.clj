@@ -5,6 +5,7 @@
 
 ; Functors
 (defn fsequence
+  "The sequence functor."
   [f x]
   (map f x))
 
@@ -13,6 +14,7 @@
 
 
 (defn fminutes
+  "The minutes functor."
   [f x]
   (-> x
       (* 1/60) ; convert seconds into minutes
@@ -23,10 +25,14 @@
       (fminutes maths/increment 1) => 61)
 
 
-(defn combine [outer inner]
+(defn combine
+  "Combine two functors to make a new one."
+  [outer inner]
   (fn [f x] (outer (partial inner f) x)))
 
-(def fsequence-of-sequences (combine fsequence fsequence))
+(def fsequence-of-sequences
+  "The sequence-of-sequences functor."
+  (combine fsequence fsequence))
 
 (fact "Functors compose."
       (fsequence-of-sequences maths/increment [[1 1] [2 2] [3 3]])
@@ -34,6 +40,7 @@
 
 
 (defn fidentity
+  "The identity functor."
   [f x]
   (f x))
 
@@ -42,6 +49,7 @@
 
 
 (defn fconstant
+  "The constant functor."
   [f x]
   x)
 
