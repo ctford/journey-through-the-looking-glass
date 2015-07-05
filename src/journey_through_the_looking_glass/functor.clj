@@ -38,7 +38,7 @@
   (f x))
 
 (fact "The identity functor applies the function normally."
-      (fidentity inc 1) => 2)
+      (fidentity maths/increment 1) => 2)
 
 
 (defn fconstant
@@ -46,4 +46,4 @@
   x)
 
 (fact "The constant functor leaves the value untouched."
-      (fconstant inc 1) => 1)
+      (fconstant maths/increment 1) => 1)
