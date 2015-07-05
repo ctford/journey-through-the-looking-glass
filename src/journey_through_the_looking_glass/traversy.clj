@@ -1,37 +1,40 @@
 (ns journey-through-the-looking-glass.traversy
-  (:require [traversy.lens :refer [update view in each conditionally *> all-entries]]
-            [midje.sweet :refer :all]))
+  (:require [traversy.lens
+             :refer [update view in each only *>]]
+            [midje.sweet :refer :all]
+            [clojure.pprint :as pprint]))
 
+(def bank
+  {:name "Smithson's"
+   :address {:line-1 "Duckett Building"
+             :line-2 "22 Welcome Road"
+             :postcode "N7 8SE"}
+   :employees [{:name "Susan Tushabe"
+                :grade :manager
+                :salary 35000}
+               {:name "Alexandra D'Souza"
+                :role :customer-assistant
+                :salary 22000}
+               {:name "Jason Allen"
+                :role :customer-assistant
+                :salary 21000}
+               {:name "Wei Wang"
+                :role :security-guard
+                :salary 20000}]})
 
-(fact "The 'each' lens focuses on each item in a sequence."
-  (-> [1 2 3] (view each)) => [1 2 3]
-  (-> [1 2 3] (update each inc)) => [2 3 4])
+(defn employees-with-role
+  "A lens focusing on employees of a specified role."
+  [role]
+  (*> (in [:employees])
+      (only #(-> % :role (= role)))))
 
-(fact "The 'in' lens focuses into a map based on a path."
-  (-> {:foo 1} (view (in [:foo]))) => [1]
-  (-> {:foo 1} (update (in [:foo]) inc)) => {:foo 2})
+(defn raise
+  "Calculates a new salary from the old one and a percentage."
+  [salary percentage]
+  (* salary (+ 1 (/ percentage 100))))
 
-(fact "Lenses combine, but not with function composition."
-  (-> {:foo [1 2 3]}
-      (view (*> (in [:foo]) each)))
-      => [1 2 3]
-
-  (-> {:foo [1 2 3]}
-      (update (*> (in [:foo]) each) inc))
-      => {:foo [2 3 4]})
-
-
-(defn only [applicable?] (*> each (conditionally applicable?)))
-
-(fact "The 'only' lens focuses on some items in a sequence."
-  (-> [1 2 3] (view (only even?))) => [2]
-  (-> [1 2 3] (update (only even?) inc)) => [1 3 3])
-
-
-(def value (in [1]))
-
-(def all-values (*> all-entries value))
-
-(fact "The 'all-values' lens focuses on the values of a map."
-  (-> {:foo 1 :bar 2} (view all-values)) => [1 2]
-  (-> {:foo 1 :bar 2} (update all-values inc)) => {:foo 2 :bar 3})
+(-> bank
+    (update
+      (*> (employees-with-role :customer-assistant) (in [:salary]))
+      #(raise % 3))
+    pprint/pprint)
