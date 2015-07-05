@@ -1,6 +1,7 @@
 (ns journey-through-the-looking-glass.lens
   (:require
     [journey-through-the-looking-glass.maths :as maths]
+    [journey-through-the-looking-glass.functor :as functor]
     [midje.sweet :refer :all])
   (:refer-clojure :exclude [get set]))
 
