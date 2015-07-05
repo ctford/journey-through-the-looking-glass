@@ -52,4 +52,5 @@ References
 * [Category Theory for Computing Science](http://www.math.mcgill.ca/triples/Barr-Wells-ctcs.pdf) - Barr and Wells
 * [Lenses: Compositional Data Access and Manipulation](https://skillsmatter.com/skillscasts/4251-lenses-compositional-data-access-and-manipulation) - Peyton Jones
 * [The Essence of the Iterator Pattern](http://www.cs.ox.ac.uk/jeremy.gibbons/publications/iterator.pdf) - Gibbons
+* [Through the Looking Glass](http://www.gutenberg.org/ebooks/12) - Carrol
 * [Traversy](https://github.com/ctford/traversy) - Ford
