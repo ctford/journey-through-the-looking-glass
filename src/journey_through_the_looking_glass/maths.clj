@@ -19,7 +19,7 @@
 
 (defn double-increment
   [x]
-  ((comp increment increment) x))
+  (increment (increment x)))
 
 (fact "double-increment adds two to an integer."
       (double-increment 1) => 3)
