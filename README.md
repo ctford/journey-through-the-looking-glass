@@ -18,7 +18,8 @@ Functors
 Lenses
 ------
 
-* Lenses are functions that lift contextualising functions into a context.
+* Lenses deconstruct values and put them back together again, letting a functor
+  control the reconstruction. 
 * `update`, `set`, `get` (and more) can all be represented by one function.
 * Lenses compose.
 
