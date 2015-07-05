@@ -8,43 +8,35 @@ The problem
 * I want to compose with fine-grained functions.
 * These two ideals are in tension.
 
-Clojure/core
-------------
-
-* `update-in` separates the focus from the applied function.
-* The same paths work with `get-in` and `assoc-in`.
-* However, `update-in` is specialised to one kind of focus.
-
 Functors
 --------
 
-* "Functors are structure-preserving maps between Categories"
-    - Barr and Wells.
-* Functors are functions that lift functions into a context.
-* Functors compose as functions.
+* "Functors are structure-preserving maps between Categories" - Barr and Wells.
+* Functors are particular strategies for applying functions.
+* Functors compose.
 
 Lenses
 ------
 
-* Lenses are functions that lift contextualising functions into
-  a context.
-* `update`, `put`, `view` can all be represented by one function.
-* Lenses compose as functions.
+* Lenses are functions that lift contextualising functions into a context.
+* `update`, `set`, `get` (and more) can all be represented by one function.
+* Lenses compose.
 
 Traversals
 ----------
 
 * Traversals are Lenses that can have more than one target.
 * The `update` part works...
-* ...but `view` needs variadic Functors (Applicatives) and
-  Monoid targets.
+* ...but `get` needs variadic Functors (Applicatives) and Monoid targets to sum up the results.
+* Traversals compose.
 
 Traversy
 --------
 
 * Uses building blocks from Clojure/core.
-* Composes easily - though not through function composition.
+* Has a rich set of lenses for Clojure's standard datatypes.
 * Lacks the full power/complexity of pure Lenses and Traversals.
+* Traversy's lenses compose.
 
 References
 ----------
