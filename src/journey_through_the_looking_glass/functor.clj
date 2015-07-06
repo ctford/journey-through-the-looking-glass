@@ -3,7 +3,11 @@
     [journey-through-the-looking-glass.maths :as maths]
     [midje.sweet :refer :all]))
 
-; Functors
+;;;;;;;;;;;;
+; Functors ;
+;;;;;;;;;;;;
+
+
 (defn fsequence
   "The sequence functor."
   [f x]

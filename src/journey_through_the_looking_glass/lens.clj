@@ -5,7 +5,11 @@
     [midje.sweet :refer :all])
   (:refer-clojure :exclude [get set]))
 
-; Lenses
+;;;;;;;;;;
+; Lenses ;
+;;;;;;;;;;
+
+
 (defn minutes
   "A lens that focuses on the minutes of an epoch."
   [functor f x]

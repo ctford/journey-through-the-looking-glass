@@ -4,6 +4,11 @@
             [midje.sweet :refer :all]
             [clojure.pprint :as pprint]))
 
+;;;;;;;;;;;;
+; Traversy ;
+;;;;;;;;;;;;
+
+
 (def bank
   {:name "Smithson's"
    :address {:line-1 "Duckett Building"

@@ -1,6 +1,10 @@
 (ns journey-through-the-looking-glass.maths
   (:require [midje.sweet :refer :all]))
 
+;;;;;;;;;
+; Maths ;
+;;;;;;;;;
+
 
 (fact "The function always goes at the front."
       (+ 1 1) => 2)
