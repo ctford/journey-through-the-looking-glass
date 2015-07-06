@@ -25,7 +25,7 @@
     (/ 1 x)
     nil))
 
-(fact "reciprocal flips fractions"
+(fact "reciprocal flips fractions."
       (reciprocal 0) => nil
       (reciprocal 1) => 1
       (reciprocal 1/2) => 2
