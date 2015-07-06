@@ -47,3 +47,8 @@ References
 * [The Essence of the Iterator Pattern](http://www.cs.ox.ac.uk/jeremy.gibbons/publications/iterator.pdf) - Gibbons
 * [Through the Looking Glass](http://www.gutenberg.org/ebooks/12) - Carrol
 * [Traversy](https://github.com/ctford/traversy) - Ford
+
+Unit tests
+----------
+
+* Run `lein midje`.
