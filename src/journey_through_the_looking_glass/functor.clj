@@ -25,18 +25,30 @@
       (fminutes maths/increment 1) => 61)
 
 
+(defn fmaybe
+  "The maybe functor."
+  [f x]
+  (when-not (nil? x)
+    (f x)))
+
+(fact "The maybe functor only applies a function when the value isn't nil."
+      (maths/increment nil) => (throws NullPointerException)
+      (fmaybe maths/increment nil) => nil
+      (fmaybe maths/increment 1) => 2)
+
+
 (defn combine
   "Combine two functors to make a new one."
   [outer inner]
   (fn [f x] (outer #(inner f %) x)))
 
-(def fsequence-of-sequences
-  "The sequence-of-sequences functor."
-  (combine fsequence fsequence))
+(def fsafe-sequence
+  "The safe-sequences functor."
+  (combine fsequence fmaybe))
 
 (fact "Functors compose."
-      (fsequence-of-sequences maths/increment [[1 1] [2 2] [3 3]])
-      => [[2 2] [3 3] [4 4]])
+      (fsequence maths/increment [1 nil 3]) => (throws NullPointerException)
+      (fsafe-sequence maths/increment [1 nil 3]) => [2 nil 4])
 
 
 (defn fidentity
@@ -55,15 +67,3 @@
 
 (fact "The constant functor leaves the value untouched."
       (fconstant maths/increment 1) => 1)
-
-
-(defn fmaybe
-  "The maybe functor."
-  [f x]
-  (when-not (nil? x)
-    (f x)))
-
-(fact "The maybe functor only applies a function when the value isn't nil."
-      (maths/increment nil) => (throws NullPointerException)
-      (fmaybe maths/increment nil) => nil
-      (fmaybe maths/increment 1) => 2)

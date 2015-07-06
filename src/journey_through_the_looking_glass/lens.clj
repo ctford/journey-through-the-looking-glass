@@ -38,7 +38,6 @@
       (get 120 minutes) => 2)
 
 
-
 (defn try-and-update
   "Update the focus of the lens, tolerating the result being nil."
   [x lens f]
