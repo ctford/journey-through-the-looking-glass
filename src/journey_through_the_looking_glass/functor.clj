@@ -32,8 +32,9 @@
 (defn fmaybe
   "The maybe functor."
   [f x]
-  (when-not (nil? x)
-    (f x)))
+  (if-not (nil? x)
+    (f x)
+    nil))
 
 (fact "The maybe functor only applies a function when the value isn't nil."
       (maths/increment nil) => (throws NullPointerException)
