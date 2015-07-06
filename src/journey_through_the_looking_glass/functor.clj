@@ -13,7 +13,7 @@
   [f x]
   (map f x))
 
-(fact "The sequence functor applies a function to each element in a sequence."
+(fact "The sequence functor applies a function across a sequence."
       (fsequence maths/increment [1 2 3]) => [2 3 4])
 
 
@@ -47,7 +47,7 @@
   (fn [f x] (outer #(inner f %) x)))
 
 (def fsafe-sequence
-  "The safe-sequences functor."
+  "The safe-sequence functor."
   (combine fsequence fmaybe))
 
 (fact "Functors compose."

@@ -42,15 +42,15 @@
       (get 120 minutes) => 2)
 
 
-(defn try-and-update
-  "Update the focus of the lens, tolerating the result being nil."
+(defn safe-update
+  "Update the focus of the lens, returning nil if it fails."
   [x lens f]
   (lens functor/fmaybe f x))
 
-(fact "try-and-update is like update, but nil-safe."
+(fact "`safe-update` is like `update`, but nil-safe."
       (update 0 minutes maths/reciprocal) => (throws NullPointerException)
-      (try-and-update 0 minutes maths/reciprocal) => nil
-      (try-and-update 120 minutes maths/reciprocal) => 30)
+      (safe-update 0 minutes maths/reciprocal) => nil
+      (safe-update 120 minutes maths/reciprocal) => 30)
 
 
 (defn compose

@@ -34,7 +34,7 @@
       (only #(-> % :role (= role)))))
 
 (defn raise
-  "Calculates a new salary from the old one and a percentage."
+  "Calculate a new salary from the old one and a percentage."
   [salary percentage]
   (* salary (+ 1 (/ percentage 100))))
 
