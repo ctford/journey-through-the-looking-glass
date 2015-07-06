@@ -28,7 +28,7 @@
 (defn combine
   "Combine two functors to make a new one."
   [outer inner]
-  (fn [f x] (outer (partial inner f) x)))
+  (fn [f x] (outer #(inner f %) x)))
 
 (def fsequence-of-sequences
   "The sequence-of-sequences functor."

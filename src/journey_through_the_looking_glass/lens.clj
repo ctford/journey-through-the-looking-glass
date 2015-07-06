@@ -9,10 +9,11 @@
 (defn minutes
   "A lens that focuses on the minutes of an epoch."
   [functor f x]
-  (-> x
-      (* 1/60)                        ; convert seconds into minutes
-      f                               ; apply the function
-      ((partial functor #(* % 60))))) ; convert minutes back into seconds
+    (->> x
+      (* 1/60)              ; convert seconds into minutes
+      f                     ; apply the function
+      (functor #(* % 60)))) ; convert minutes back into seconds...
+                            ; ...using a functor!
 
 
 ; Lens operations
@@ -53,7 +54,7 @@
   "Compose two lenses to make a new one."
   [outer inner]
   (fn [functor f x]
-    (outer functor (partial inner functor f) x)))
+    (outer functor #(inner functor f %) x)))
 
 (def hours
   "A lens that focuses on the hours of an epoch."
