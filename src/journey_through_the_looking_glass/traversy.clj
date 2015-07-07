@@ -38,9 +38,10 @@
   [salary percentage]
   (* salary (+ 1 (/ percentage 100))))
 
-(-> bank
-    (update customer-assistant-salaries #(raise % 3))
-    pprint/pprint)
+(comment
+  (-> bank
+      (update customer-assistant-salaries #(raise % 3))
+      pprint/pprint))
 
 
 (defn raise-customer-assistant-salaries
@@ -53,6 +54,7 @@
                           (update-in employee [:salary] #(raise % percentage))
                           employee)))))
 
-(-> bank
-    (raise-customer-assistants 3)
-    pprint/pprint)
+(comment
+  (-> bank
+      (raise-customer-assistant-salaries 3)
+      pprint/pprint))

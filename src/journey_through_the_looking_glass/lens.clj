@@ -26,11 +26,6 @@
   [x lens f]
   (lens functor/fidentity f x))
 
-(defn set
-  "Set the value at the focus of the lens."
-  [x lens value]
-  (update x lens (constantly value)))
-
 (defn get
   "Get the value at the focus of the lens."
   [x lens]
@@ -38,8 +33,16 @@
 
 (fact "The minutes lens supports the lens operations."
       (update 120 seconds<>minutes maths/increment) => 180
-      (set 120 seconds<>minutes 4) => 240
       (get 120 seconds<>minutes) => 2)
+
+
+(defn set
+  "Set the value at the focus of the lens."
+  [x lens value]
+  (update x lens (constantly value)))
+
+(fact "The minutes lens supports `set` too."
+      (set 120 seconds<>minutes 4) => 240)
 
 
 (defn safe-update
