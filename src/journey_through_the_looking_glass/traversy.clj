@@ -35,7 +35,7 @@
                (map
                  (fn [employee]
                    (if (= (:role employee) :customer-assistant)
-                     (update-in employee [:salary] #(raise % percentage))
+                     (update-in employee [:salary] #(* % (+ 1 (/ percentage 100))))
                      employee))
                  employees))))
 
