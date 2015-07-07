@@ -27,6 +27,22 @@
                 :role :security-guard
                 :salary 20000}]})
 
+(defn raise-customer-assistant-salaries
+  "Raise customer assistant salaries by the specified percentage."
+  [organisation percentage]
+  (update-in organisation [:employees]
+             (partial map
+                      (fn [employee]
+                        (if (= (:role employee) :customer-assistant)
+                          (update-in employee [:salary] #(raise % percentage))
+                          employee)))))
+
+(comment
+  (-> bank
+      (raise-customer-assistant-salaries 3)
+      pprint/pprint))
+
+
 (def customer-assistant-salaries
   "A lens focusing on customer assistant salaries."
   (*> (in [:employees])
@@ -41,20 +57,4 @@
 (comment
   (-> bank
       (update customer-assistant-salaries #(raise % 3))
-      pprint/pprint))
-
-
-(defn raise-customer-assistant-salaries
-  "Raise customer assistant salaries by the specified percentage."
-  [organisation percentage]
-  (update-in organisation [:employees]
-             (partial map
-                      (fn [employee]
-                        (if (= (:role employee) :customer-assistant)
-                          (update-in employee [:salary] #(raise % percentage))
-                          employee)))))
-
-(comment
-  (-> bank
-      (raise-customer-assistant-salaries 3)
       pprint/pprint))
