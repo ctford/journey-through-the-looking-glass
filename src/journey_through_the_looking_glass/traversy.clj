@@ -31,11 +31,13 @@
   "Raise customer assistant salaries by the specified percentage."
   [organisation percentage]
   (update-in organisation [:employees]
-             (partial map
-                      (fn [employee]
-                        (if (= (:role employee) :customer-assistant)
-                          (update-in employee [:salary] #(raise % percentage))
-                          employee)))))
+             (fn [employees]
+               (map
+                 (fn [employee]
+                   (if (= (:role employee) :customer-assistant)
+                     (update-in employee [:salary] #(raise % percentage))
+                     employee))
+                 employees))))
 
 (comment
   (-> bank
