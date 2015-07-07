@@ -15,7 +15,7 @@
              :line-2 "22 Welcome Road"
              :postcode "N7 8SE"}
    :employees [{:name "Susan Tushabe"
-                :grade :manager
+                :role :manager
                 :salary 35000}
                {:name "Alexandra D'Souza"
                 :role :customer-assistant
