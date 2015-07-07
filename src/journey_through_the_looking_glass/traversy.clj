@@ -30,7 +30,7 @@
 (def customer-assistant-salaries
   "A lens focusing on customer assistant salaries."
   (*> (in [:employees])
-      (only #(-> % :role (= :customer-assistant)))
+      (only #(= :customer-assistant (:role %)))
       (in [:salary])))
 
 (defn raise
