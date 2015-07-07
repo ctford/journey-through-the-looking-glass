@@ -12,8 +12,8 @@
 
 (defn seconds<>minutes
   "A lens that focuses on the minutes of an epoch of seconds."
-  [functor f x]
-    (->> x
+  [functor f seconds]
+    (->> seconds
       (* 1/60)              ; convert seconds into minutes
       f                     ; apply the function
       (functor #(* % 60)))) ; convert minutes back into seconds...
@@ -47,8 +47,8 @@
 
 (defn safe-update
   "Update the focus of the lens, returning nil if it fails."
-  [x lens f]
-  (lens functor/fmaybe f x))
+  [x lens f-that-might-fail]
+  (lens functor/fmaybe f-that-might-fail x))
 
 (fact "`safe-update` is like `update`, but nil-safe."
       (update 0 seconds<>minutes maths/reciprocal)

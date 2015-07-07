@@ -12,8 +12,8 @@
 
 (defn increment
   "A Clojure equivalent of `++`."
-  [x]
-  (+ 1 x))
+  [number]
+  (+ 1 number))
 
 (fact "`increment` adds one to an integer."
       (increment 1) => 2)
@@ -24,9 +24,9 @@
 
 (defn reciprocal
   "Take the reciprocal of a fraction."
-  [x]
-  (if-not (zero? x)
-    (/ 1 x)
+  [number]
+  (if-not (zero? number)
+    (/ 1 number)
     nil))
 
 (fact "`reciprocal` flips fractions."

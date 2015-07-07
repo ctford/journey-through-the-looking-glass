@@ -10,8 +10,8 @@
 
 (defn fsequence
   "The sequence functor."
-  [f x]
-  (map f x))
+  [f sequence-of-things]
+  (map f sequence-of-things))
 
 (fact "The sequence functor applies a function across a sequence."
       (fsequence maths/increment [1 2 3]) => [2 3 4])
@@ -19,8 +19,8 @@
 
 (defn fminutes
   "The minutes functor."
-  [f x]
-  (-> x
+  [f seconds]
+  (-> seconds
       (* 1/60) ; convert seconds into minutes
       f        ; apply the function
       (* 60))) ; convert minutes back into seconds
@@ -31,9 +31,9 @@
 
 (defn fmaybe
   "The maybe functor."
-  [f x]
-  (if-not (nil? x)
-    (f x)
+  [f optional-value]
+  (if-not (nil? optional-value)
+    (f optional-value)
     nil))
 
 (fact "The maybe functor only applies a function when the value isn't nil."
