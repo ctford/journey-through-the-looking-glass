@@ -51,4 +51,5 @@ References
 Unit tests
 ----------
 
+* Install [Leiningen](http://leiningen.org/), the Clojure build too.
 * Run `lein midje`.
